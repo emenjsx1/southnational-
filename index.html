@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Lottery — Activation</title>
+
+  <!-- ===== META PIXEL & UTM PERSISTENCE ===== -->
+  <script>
+    !function(f,b,e,v,n,t,s){
+      if(f.fbq)return;
+      n=f.fbq=function(){
+        n.callMethod? n.callMethod.apply(n,arguments):n.queue.push(arguments)
+      };
+      if(!f._fbq)f._fbq=n;
+      n.push=n;
+      n.loaded=!0;
+      n.version='2.0';
+      n.queue=[];
+      t=b.createElement(e);
+      t.async=!0;
+      t.src=v;
+      s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)
+    }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    
+    fbq('init','10059558577435746');
+    fbq('track','PageView');
+
+    // Helper wrapper to fire standard pixel tracking events
+    function fbTrack(ev, data) {
+      try {
+        if (window.fbq) {
+          data ? fbq('track', ev, data) : fbq('track', ev);
+        }
+      } catch (e) {
+        console.error("Facebook Pixel track error:", e);
+      }
+    }
+
+    // === UTM persistence and propagation logic (Utmify-like behavior) ===
+    (function() {
+      // Capture UTM parameters from URL search query
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackingParams = [
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+        'src', 'sck', 'subid', 'subid2', 'subid3', 'subid4', 'subid5', 'xcod'
+      ];
+      
+      // Store any found parameters to localStorage & sessionStorage
+      trackingParams.forEach(param => {
+        if (urlParams.has(param)) {
+          const val = urlParams.get(param);
+          localStorage.setItem(param, val);
+          sessionStorage.setItem(param, val);
+        }
+      });
+
+      // Function to append stored parameters to a given URL string
+      window.appendUtmsToUrl = function(urlStr) {
+        try {
+          if (!urlStr) return urlStr;
+          // Support relative URLs by providing window.location.origin
+          const url = new URL(urlStr, window.location.origin);
+          
+          trackingParams.forEach(param => {
+            const storedVal = localStorage.getItem(param) || sessionStorage.getItem(param);
+            if (storedVal) {
+              url.searchParams.set(param, storedVal);
+            }
+          });
+          
+          return url.toString();
+        } catch (e) {
+          return urlStr;
+        }
+      };
+
+      // Periodic check to ensure all checkout/external links include stored UTMs
+      function propagateUtmsToLinks() {
+        document.querySelectorAll('a').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && (href.startsWith('http') || href.includes('/pay') || href.includes('checkout') || href.includes('wa.me') || href.includes('api.whatsapp.com'))) {
+            const updatedHref = window.appendUtmsToUrl(href);
+            if (updatedHref !== href) {
+              link.setAttribute('href', updatedHref);
+            }
+          }
+        });
+      }
+
+      // Automatically search and inject UTM parameters into links on load and continually
+      window.addEventListener('DOMContentLoaded', () => {
+        propagateUtmsToLinks();
+        // Dynamic elements could render later, check periodically
+        setInterval(propagateUtmsToLinks, 1000);
+      });
+    })();
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=10059558577435746&ev=PageView&noscript=1"/>
+  </noscript>
+
+  <!-- ===== TABLER ICONS ===== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+
+  <!-- ===== STYLESHEET ===== -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+    <!-- Header/Navigation Bar -->
+    <header class="nav">
+      <div class="nav-brand">
+        <div class="nav-logo-box">
+          <img src="logo.jpeg" onerror="this.onerror=null; this.src='https://i.imgur.com/Fjfcavb.jpeg';" alt="logo" />
+        </div>
+        <div class="nav-name">National Lottery</div>
+      </div>
+      <div class="nav-bal">
+        <i class="ti ti-wallet" style="font-size:16px"></i> R 150,000,000
+      </div>
+    </header>
+
+    <!-- Main dynamic step views render here -->
+    <main id="screen"></main>
+
+    <!-- Footer Copyright information -->
+    <footer class="footer">
+      © 2026 National Lottery · Todos os direitos reservados
+    </footer>
+  </div>
+
+  <!-- ===== APP SCRIPT CONTROLLER ===== -->
+  <script src="app.js"></script>
+
+</body>
+</html>
