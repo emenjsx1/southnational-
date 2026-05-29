@@ -363,7 +363,7 @@ function showLocked() {
         
         <!-- Vturb smartplayer wrapper -->
         <div class="video-container">
-          <vturb-smartplayer id="vid-6a19c07ea2a340c8293759ed" style="display:block;margin:0 auto;width:100%;height:100%;"></vturb-smartplayer>
+          <vturb-smartplayer id="vid-6a19c07ea2a340c8293759ed" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>
         </div>
         
         <div class="perks-row">
@@ -387,12 +387,6 @@ function showLocked() {
       </div>
     </div>
   `;
-
-  // Dynamically load the external Vturb Player API
-  const playerScript = document.createElement("script");
-  playerScript.src = "https://scripts.converteai.net/7ad6c08a-2c19-4845-ad42-960c511320c4/players/6a19c07ea2a340c8293759ed/v4/player.js";
-  playerScript.async = true;
-  document.head.appendChild(playerScript);
 }
 
 // Automatically start the quiz flow upon load
